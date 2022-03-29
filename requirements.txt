@@ -1,0 +1,4 @@
+google-cloud-secret-manager>=2.9.2
+dataverk-vault>=0.1.10
+dataverk>=0.4.17
+google-cloud-storage

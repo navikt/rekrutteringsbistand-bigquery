@@ -1,0 +1,12 @@
+apiVersion: nais.io/v1
+kind: Naisjob
+metadata:
+  labels:
+    team: toi
+  name: rekrutteringsbistand-kandidat-bigquery
+  namespace: toi
+spec:
+  image: {{ image }}
+  schedule: "*/1 * * * *"
+  vault:
+    enabled: true
