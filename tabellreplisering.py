@@ -1,13 +1,26 @@
 import dataverk as dv
-from google.cloud import bigquerry
-dv = Client()
+from google.cloud import bigquery
+from dataverk_vault import api as vault_api
 
+
+# Konfigurasjon av bigQuery-klient
+secrets = vault_api.read_secrets()
+creds = secrets.pop("GCP_json")
+bigQueryClient = bigquery.client(credentials=creds)
+jobConfig = bigquery.LoadJobConfig(
+    write_disposition="WRITE_TRUNCATE"
+)
+
+# Konfigurer lesing fra database
+dv = Client()
 tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
+
 
 for tabell in tabeller:
     sql = "select * from " + tabell
     df = dv.read_sql(connector='postgres', source='rekrutteringsbistand-kandidat', sql=sql)
-    print("Hentet data fra databasetabell " + tabell)
+    job = bigQueryClient.load_table_from_dataframe(df, "kandidat-api-" + tabell, job_config=jobConfig)
+    job.result()
 
 
 # df = dv.read_sql(connector='postgres', source='rekrutteringsbistand-kandidat', sql=sql)
