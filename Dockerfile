@@ -6,6 +6,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
-COPY secret_pusher.py .
+COPY tabellreplisering.py .
 
 CMD ["python3", "tabellreplisering.py"]
