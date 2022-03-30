@@ -2,6 +2,8 @@ import dataverk as dv
 from google.cloud import bigquery
 from dataverk_vault import api as vault_api
 from google.oauth2 import service_account
+import psycopg2 as pg
+import pandas.io.sql as psql
 import logging
 
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
@@ -22,14 +24,17 @@ jobConfig = bigquery.LoadJobConfig(
 )
 
 # Konfigurer lesing fra database
-dv = Client()
-tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
+rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
+adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
+user, password = vault_api.get_database_creds(creds_loc).split(":")
+connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
+tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
 
 for tabell in tabeller:
     sql = "select * from " + tabell
-    df = dv.read_sql(connector='postgres', source='rekrutteringsbistand-kandidat', sql=sql)
-    job = bigQueryClient.load_table_from_dataframe(df, "kandidat-api-" + tabell, job_config=jobConfig)
+    dataframe = psql.read_sql(sql, connection)
+    job = bigQueryClient.load_table_from_dataframe(dataframe, "kandidat-api-" + tabell, job_config=jobConfig)
     job.result()
 
 exit(0)

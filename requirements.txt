@@ -4,3 +4,5 @@ google-cloud-storage>=1.40.0
 google-cloud
 dataverk-vault>=0.1.10
 dataverk>=0.4.17
+psycopg2
+pandas
