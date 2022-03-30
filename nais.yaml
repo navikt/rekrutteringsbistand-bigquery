@@ -8,6 +8,10 @@ metadata:
 spec:
   image: {{ image }}
   schedule: "*/1 * * * *"
+  accessPolicy:
+    outbound:
+      external:
+      - host: bigquery.googleapis.com
   vault:
     enabled: true
   env:
