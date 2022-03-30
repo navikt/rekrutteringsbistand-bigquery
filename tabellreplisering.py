@@ -9,7 +9,7 @@ import logging
 secrets = vault_api.read_secrets()
 
 creds = secrets.pop("GCP_json")
-logging.info("Creds: " + len(creds))
+logging.info("Creds: ", len(creds))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
 bigQueryClient = bigquery.Client(credentials, project=creds.project_id)
