@@ -6,7 +6,7 @@ import json
 # Konfigurasjon av bigQuery-klient
 secrets = vault_api.read_secrets()
 creds = secrets.pop("GCP_json")
-credsDictionary = json.loads(creds)[0]
+credsDictionary = json.loads(creds)
 bigQueryClient = bigquery.Client(credentials=credsDictionary, project=credsDictionary['project_id'])
 jobConfig = bigquery.LoadJobConfig(
     write_disposition="WRITE_TRUNCATE"
