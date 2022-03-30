@@ -14,7 +14,7 @@ creds = secrets.pop("GCP_json")
 logger.info("Creds: " + str(len(creds)))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
-bigQueryClient = bigquery.Client(credentials, project=credentials.project_id)
+bigQueryClient = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
 
 jobConfig = bigquery.LoadJobConfig(
