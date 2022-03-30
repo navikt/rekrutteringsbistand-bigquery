@@ -4,6 +4,7 @@ from dataverk_vault import api as vault_api
 from google.oauth2 import service_account
 import logging
 
+logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger("tabellreplisering.py")
 
 # Konfigurasjon av bigQuery-klient
