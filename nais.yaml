@@ -11,5 +11,15 @@ spec:
   vault:
     enabled: true
   env:
+    - name: APPLICATION_NAME
+      value: rekrutteringsbistand-kandidat-bigquery
+    - name: VKS_VAULT_ADDR 
+      value: https://vault.adeo.no
+    - name: VKS_AUTH_PATH
+      value: auth/kubernetes/prod/fss/login
+    - name: VKS_KV_PATH
+      value: kv/prod/fss
+    - name: VKS_SECRET_DEST_PATH
+      value: /var/run/secrets/nais.io/vault
     - name: K8S_SERVICEACCOUNT_PATH
       value: /var/run/secrets/kubernetes.io/serviceaccount
