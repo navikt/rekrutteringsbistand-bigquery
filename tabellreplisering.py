@@ -6,7 +6,7 @@ from dataverk_vault import api as vault_api
 # Konfigurasjon av bigQuery-klient
 secrets = vault_api.read_secrets()
 creds = secrets.pop("GCP_json")
-bigQueryClient = bigquery.client(credentials=creds)
+bigQueryClient = bigquery.client(credentials=creds, project=creds.project_id)
 jobConfig = bigquery.LoadJobConfig(
     write_disposition="WRITE_TRUNCATE"
 )
