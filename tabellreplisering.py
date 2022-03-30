@@ -8,7 +8,7 @@ secrets = vault_api.read_secrets()
 
 creds = secrets.pop("GCP_json")
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
-bigQueryClient = bigquery.Client(credentials)
+bigQueryClient = bigquery.Client(credentials, project=creds.project_id)
 
 jobConfig = bigquery.LoadJobConfig(
     write_disposition="WRITE_TRUNCATE"
