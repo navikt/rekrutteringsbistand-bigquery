@@ -35,9 +35,10 @@ tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
 for tabell in tabeller:
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
+    dataframe.to_gbq("kandidat_api." + tabell, credentials=credentials)
     logger.info("Dataframe-kolonner: " + dataframe.columns)
-    job = bigQueryClient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
-    job.result()
+    #job = bigQueryClient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
+    #job.result()
 
 exit(0)
 
