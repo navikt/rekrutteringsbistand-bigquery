@@ -11,7 +11,7 @@ logger = logging.getLogger("tabellreplisering.py")
 secrets = vault_api.read_secrets()
 
 creds = secrets.pop("GCP_json")
-logger.info("Creds: ", len(creds))
+logger.info("Creds: " + str(len(creds)))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
 bigQueryClient = bigquery.Client(credentials, project=creds.project_id)
