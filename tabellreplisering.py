@@ -16,7 +16,7 @@ creds = secrets.pop("GCP_json")
 logger.info("Creds: " + str(len(creds)))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
-bigQueryClient = bigquery.Client(credentials=credentials, project=credentials.project_id)
+bigQueryClient = bigquery.Client(credentials=credentials)
 
 
 jobConfig = bigquery.LoadJobConfig(
@@ -27,6 +27,7 @@ jobConfig = bigquery.LoadJobConfig(
 rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
 adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
 user, password = vault_api.get_database_creds(creds_loc).split(":")
+logger.info("DB-brukernavn: " + user)
 connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
 tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
@@ -34,6 +35,7 @@ tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
 for tabell in tabeller:
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
+    logger.info("Dataframe-kolonner: " + dataframe.columns)
     job = bigQueryClient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
     job.result()
 
