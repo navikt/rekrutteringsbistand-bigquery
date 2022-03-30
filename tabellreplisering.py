@@ -16,12 +16,12 @@ creds = secrets.pop("GCP_json")
 logger.info("Creds: " + str(len(creds)))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
+
 #bigQueryClient = bigquery.Client(credentials=credentials)
 
-
-jobConfig = bigquery.LoadJobConfig(
-    write_disposition="WRITE_TRUNCATE"
-)
+# jobConfig = bigquery.LoadJobConfig(
+#     write_disposition="WRITE_TRUNCATE"
+# )
 
 # Konfigurer lesing fra database
 rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
@@ -35,7 +35,7 @@ tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
 for tabell in tabeller:
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
-    dataframe.to_gbq("kandidat_api." + tabell, credentials=credentials)
+    dataframe.to_gbq("kandidat_api." + tabell, credentials=credentials, if_exists="replace")
     logger.info("Dataframe-kolonner: " + dataframe.columns)
     #job = bigQueryClient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
     #job.result()
