@@ -7,3 +7,4 @@ dataverk>=0.4.17
 psycopg2
 pandas
 pyarrow
+pandas-gbq
