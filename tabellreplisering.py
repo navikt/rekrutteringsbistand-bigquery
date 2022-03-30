@@ -4,12 +4,13 @@ from dataverk_vault import api as vault_api
 from google.oauth2 import service_account
 import logging
 
+logger = logging.getLogger("tabellreplisering.py")
 
 # Konfigurasjon av bigQuery-klient
 secrets = vault_api.read_secrets()
 
 creds = secrets.pop("GCP_json")
-logging.info("Creds: ", len(creds))
+logger.info("Creds: ", len(creds))
 
 credentials = service_account.Credentials.from_service_account_info(eval(creds))
 bigQueryClient = bigquery.Client(credentials, project=creds.project_id)
@@ -30,6 +31,7 @@ for tabell in tabeller:
     job = bigQueryClient.load_table_from_dataframe(df, "kandidat-api-" + tabell, job_config=jobConfig)
     job.result()
 
+exit(0)
 
 # df = dv.read_sql(connector='postgres', source='rekrutteringsbistand-kandidat', sql=sql)
 
