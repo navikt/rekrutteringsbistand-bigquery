@@ -1,13 +1,15 @@
 import dataverk as dv
 from google.cloud import bigquery
 from dataverk_vault import api as vault_api
-import json
+from google.oauth2 import service_account
 
 # Konfigurasjon av bigQuery-klient
 secrets = vault_api.read_secrets()
+
 creds = secrets.pop("GCP_json")
-credsDictionary = json.loads(creds)
-bigQueryClient = bigquery.Client(credentials=credsDictionary, project=creds.project_id)
+credentials = service_account.Credentials.from_service_account_info(eval(creds))
+bigQueryClient = bigquery.Client(credentials)
+
 jobConfig = bigquery.LoadJobConfig(
     write_disposition="WRITE_TRUNCATE"
 )
