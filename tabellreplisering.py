@@ -25,8 +25,8 @@ connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user=
 
 tabeller = {
     "utfallsendring": [],
-    "veilkandidat": [bigquery.SchemaField("uuid", bigquery.enums.SqlTypeNames.STRING)],
-    "veilkandliste": [bigquery.SchemaField("uuid", bigquery.enums.SqlTypeNames.STRING)]
+    "veilkandidat": [],
+    "veilkandliste": []
 }
 
 for tabell, tabellKonfigurasjon in tabeller.items():
