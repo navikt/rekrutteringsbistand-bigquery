@@ -32,7 +32,7 @@ tabeller = {
 for tabell, tabellKonfigurasjon in tabeller.items():
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
-    jobConfig = bigquery.LoadJobConfig(tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
+    jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
     job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
     job.result()
     logger.info("Har speilet tabell " + tabell + " til BigQuery")
