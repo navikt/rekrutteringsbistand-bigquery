@@ -16,7 +16,6 @@ secrets = vault_api.read_secrets()
 bigQueryKlientNøkkel = secrets.pop("GCP_json")
 bigQueryCredentials = service_account.Credentials.from_service_account_info(eval(bigQueryKlientNøkkel))
 bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
-jobConfig = bigquery.LoadJobConfig(write_disposition="WRITE_TRUNCATE")
 
 # Konfigurer lesing fra database
 rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
@@ -24,15 +23,21 @@ adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
 user, password = vault_api.get_database_creds(creds_loc).split(":")
 connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
-tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
+tabeller = {
+    "utfallsendring": [],
+    "veilkandidat": [bigquery.SchemaField("uuid", bigquery.enums.SqlTypeNames.STRING)],
+    "veilkandliste": [bigquery.SchemaField("uuid", bigquery.enums.SqlTypeNames.STRING)]
+}
 
-for tabell in tabeller:
+for tabell, tabellKonfigurasjon in tabeller.items():
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
+    jobConfig = bigquery.LoadJobConfig(tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
     job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
     job.result()
     logger.info("Har speilet tabell " + tabell + " til BigQuery")
 
+logger.info("Ferdig med speiling av alle tabeller")
 exit(0)
 
 # df = dv.read_sql(connector='postgres', source='rekrutteringsbistand-kandidat', sql=sql)
