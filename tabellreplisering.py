@@ -9,22 +9,19 @@ import logging
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger("tabellreplisering.py")
 
-# Konfigurasjon av bigQuery-klient
+# Vault 
 secrets = vault_api.read_secrets()
 
-creds = secrets.pop("GCP_json")
-logger.info("Creds: " + str(len(creds)))
-
-credentials = service_account.Credentials.from_service_account_info(eval(creds))
-
-bigQueryClient = bigquery.Client(credentials=credentials)
+# Konfigurasjon av bigQuery-klient
+bigQueryKlientNøkkel = secrets.pop("GCP_json")
+bigQueryCredentials = service_account.Credentials.from_service_account_info(eval(bigQueryKlientNøkkel))
+bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
 jobConfig = bigquery.LoadJobConfig(write_disposition="WRITE_TRUNCATE")
 
 # Konfigurer lesing fra database
 rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
 adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
 user, password = vault_api.get_database_creds(creds_loc).split(":")
-logger.info("DB-brukernavn: " + user)
 connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
 tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
@@ -32,10 +29,9 @@ tabeller = ["utfallsendring", "veilkandidat", "veilkandliste"]
 for tabell in tabeller:
     sql = "select * from " + tabell
     dataframe = psql.read_sql(sql, connection)
-    #dataframe.to_gbq("kandidat_api." + tabell, credentials=credentials, if_exists="replace")
-    logger.info("Dataframe-kolonner: " + dataframe.columns)
-    job = bigQueryClient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
+    job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
     job.result()
+    logger.info("Har speilet tabell " + tabell + " til BigQuery")
 
 exit(0)
 
