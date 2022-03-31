@@ -7,7 +7,7 @@ metadata:
   namespace: toi
 spec:
   image: {{ image }}
-  schedule: "*/1 * * * *"
+  schedule: "0 0 1 * * ?"
   webproxy: true
   vault:
     enabled: true
