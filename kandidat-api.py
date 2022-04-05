@@ -7,7 +7,7 @@ import pandas.io.sql as psql
 import logging
 
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-logger = logging.getLogger("tabellreplisering.py")
+logger = logging.getLogger("kandidat-api.py")
 
 # Vault 
 secrets = vault_api.read_secrets()
