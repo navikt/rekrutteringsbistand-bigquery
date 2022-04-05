@@ -23,11 +23,14 @@ adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
 user, password = vault_api.get_database_creds(creds_loc).split(":")
 connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
+# Dictionary med tabellnavn og liste for konfigurasjon av hvordan kolonner skal tolkes
+# Eksempel på kolonnekonfigurasjon: bigquery.SchemaField("wikidata_id", bigquery.enums.SqlTypeNames.STRING)
 tabeller = {
     "utfallsendring": [],
     "veilkandidat": [],
     "veilkandliste": []
 }
+
 
 for tabell, tabellKonfigurasjon in tabeller.items():
     sql = "select * from " + tabell

@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/rekrutteringsbistand-kandidat-bigquery:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/rekrutteringsbistand-bigquery:${{ github.sha }}
 
 jobs:
   build:

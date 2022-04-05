@@ -3,7 +3,7 @@ kind: Naisjob
 metadata:
   labels:
     team: toi
-  name: rekrutteringsbistand-kandidat-bigquery
+  name: rekrutteringsbistand-bigquery
   namespace: toi
 spec:
   image: {{ image }}
@@ -20,7 +20,7 @@ spec:
       memory: 4000Mi
   env:
     - name: APPLICATION_NAME
-      value: rekrutteringsbistand-kandidat-bigquery
+      value: rekrutteringsbistand-bigquery
     - name: VKS_VAULT_ADDR 
       value: https://vault.adeo.no
     - name: VKS_AUTH_PATH
