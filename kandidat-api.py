@@ -18,8 +18,8 @@ bigQueryCredentials = service_account.Credentials.from_service_account_info(eval
 bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
 
 # Konfigurer lesing fra database
-rekrutteringsbistand_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
-adeo, ip, creds_loc = rekrutteringsbistand_creds.split(":")
+kandidat_api_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
+adeo, ip, creds_loc = kandidat_api_creds.split(":")
 user, password = vault_api.get_database_creds(creds_loc).split(":")
 connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 
