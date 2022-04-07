@@ -9,19 +9,25 @@ import logging
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger("kandidat-api.py")
 
-# Vault 
-secrets = vault_api.read_secrets()
+try:
+    secrets = vault_api.read_secrets()
+except:
+    logger.error("Kunne ikke hente secrets fra Vault")
 
-# Konfigurasjon av bigQuery-klient
-bigQueryKlientNøkkel = secrets.pop("GCP_json")
-bigQueryCredentials = service_account.Credentials.from_service_account_info(eval(bigQueryKlientNøkkel))
-bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
+try:
+    bigQueryKlientNøkkel = secrets.pop("GCP_json")
+    bigQueryCredentials = service_account.Credentials.from_service_account_info(eval(bigQueryKlientNøkkel))
+    bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
+except:
+    logger.error("Kunne ikke lage BigQuery-klient")
 
-# Konfigurer lesing fra database
-kandidat_api_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
-adeo, ip, creds_loc = kandidat_api_creds.split(":")
-user, password = vault_api.get_database_creds(creds_loc).split(":")
-connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
+try:
+    kandidat_api_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
+    adeo, ip, creds_loc = kandidat_api_creds.split(":")
+    user, password = vault_api.get_database_creds(creds_loc).split(":")
+    connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
+except:
+    logger.error("Kunne ikke opprette databaseklient")
 
 # Dictionary med tabellnavn og liste for konfigurasjon av hvordan kolonner skal tolkes
 # Eksempel på kolonnekonfigurasjon: bigquery.SchemaField("wikidata_id", bigquery.enums.SqlTypeNames.STRING)
@@ -31,14 +37,16 @@ tabeller = {
     "veilkandliste": []
 }
 
-
 for tabell, tabellKonfigurasjon in tabeller.items():
-    sql = "select * from " + tabell
-    dataframe = psql.read_sql(sql, connection)
-    jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
-    job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
-    job.result()
-    logger.info("Har speilet tabell " + tabell + " til BigQuery")
+    try:
+        sql = "select * from " + tabell
+        dataframe = psql.read_sql(sql, connection)
+        jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
+        job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
+        job.result()
+        logger.info("Har speilet tabell " + tabell + " til BigQuery")
+    except:
+        logger.error("Kunne ikke speile tabell " + tabell + " til BigQuery")
 
 logger.info("Ferdig med speiling av alle tabeller")
 exit(0)
