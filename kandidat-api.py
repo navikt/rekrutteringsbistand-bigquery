@@ -13,6 +13,7 @@ try:
     secrets = vault_api.read_secrets()
 except:
     logger.error("Kunne ikke hente secrets fra Vault")
+    exit(1)
 
 try:
     bigQueryKlientNøkkel = secrets.pop("GCP_json")
@@ -20,6 +21,7 @@ try:
     bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
 except:
     logger.error("Kunne ikke lage BigQuery-klient")
+    exit(1)
 
 try:
     kandidat_api_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
@@ -28,6 +30,7 @@ try:
     connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
 except:
     logger.error("Kunne ikke opprette databaseklient")
+    exit(1)
 
 # Dictionary med tabellnavn og liste for konfigurasjon av hvordan kolonner skal tolkes
 # Eksempel på kolonnekonfigurasjon: bigquery.SchemaField("wikidata_id", bigquery.enums.SqlTypeNames.STRING)
@@ -47,6 +50,7 @@ for tabell, tabellKonfigurasjon in tabeller.items():
         logger.info("Har speilet tabell " + tabell + " til BigQuery")
     except:
         logger.error("Kunne ikke speile tabell " + tabell + " til BigQuery")
+        exit(1)
 
 logger.info("Ferdig med speiling av alle tabeller")
 exit(0)
