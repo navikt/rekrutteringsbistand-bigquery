@@ -28,28 +28,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais.yaml,alerts.yaml
-
-  snyk-monitor:
-    name: Monitor dependencies with Snyk
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Installer avhengigheter
-        run: pip install -r requirements.txt
-      - name: Install Snyk CLI
-        uses: snyk/actions/setup@master
-      - name: Monitor dependencies with Snyk
-        run: >
-          snyk monitor
-          --org=toi
-          --project-name=${{ github.repository }}
-          --remote-repo-url=https://github.com/${{ github.repository }}.git
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
