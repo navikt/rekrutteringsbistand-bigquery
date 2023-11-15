@@ -10,6 +10,8 @@ env:
 
 jobs:
   build:
+    permissions:
+      packages: write
     name: build and deploy
     runs-on: ubuntu-latest
     steps:
