@@ -37,7 +37,8 @@ except:
 tabeller = {
     "utfallsendring": [],
     "veilkandidat": [],
-    "veilkandliste": []
+    "veilkandliste": [],
+    "veilkandidatnotat": [],
 }
 
 for tabell, tabellKonfigurasjon in tabeller.items():
