@@ -39,6 +39,7 @@ tabeller = {
     "veilkandidat": [],
     "veilkandliste": [],
     "veilkandidatnotat": [],
+    "avviksrapportering": [],
 }
 
 for tabell, tabellKonfigurasjon in tabeller.items():
