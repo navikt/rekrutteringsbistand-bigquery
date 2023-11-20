@@ -46,6 +46,7 @@ for tabell, tabellKonfigurasjon in tabeller.items():
     try:
         sql = "select * from " + tabell
         dataframe = psql.read_sql(sql, connection)
+        dataframe.columns = dataframe.columns.str.replace("å", "aa")
         jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
         job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
         job.result()
