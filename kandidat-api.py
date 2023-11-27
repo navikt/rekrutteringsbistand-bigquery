@@ -41,6 +41,7 @@ tabeller = {
     "veilkandidatnotat": [],
     "avviksrapportering": [],
     "formidlingavusynligkandidat": [],
+    "sending_av_kandidathendelse": [],
 }
 
 for tabell, tabellKonfigurasjon in tabeller.items():
