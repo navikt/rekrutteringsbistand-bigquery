@@ -1,4 +1,3 @@
-import dataverk as dv
 from google.cloud import bigquery
 from dataverk_vault import api as vault_api
 from google.oauth2 import service_account
