@@ -23,9 +23,9 @@ except:
     exit(1)
 
 # Funksjon brukt for å speile tabeller fra en database til BigQuery
-def speiling_db_bq(db_navn, url, tabeller, bigQueryKlient, logger):
+def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
     try:
-        creds = secrets[url]
+        creds = secrets[db_navn + "-db-url"]
         adeo, ip, creds_loc = creds.split(":")
         user, password = vault_api.get_database_creds(creds_loc).split(":")
         connection = pg.connect(f"host={adeo} dbname={db_navn} user={user} password={password}")
@@ -39,7 +39,7 @@ def speiling_db_bq(db_navn, url, tabeller, bigQueryKlient, logger):
             dataframe = psql.read_sql(sql, connection)
             dataframe.columns = dataframe.columns.str.replace("å", "aa")
             jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
-            job = bigQueryKlient.load_table_from_dataframe(dataframe, f"toi-prod-324e.{url}." + tabell, job_config=jobConfig)
+            job = bigQueryKlient.load_table_from_dataframe(dataframe, f"toi-prod-324e.{db_navn}." + tabell, job_config=jobConfig)
             job.result()
             logger.info(f"Har speilet tabell {tabell} til BigQuery")
         except:
