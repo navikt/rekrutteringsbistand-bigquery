@@ -6,7 +6,7 @@ import pandas.io.sql as psql
 import logging
 
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-logger = logging.getLogger("kandidat-api.py")
+logger = logging.getLogger("speiling_db_bq.py")
 
 try:
     secrets = vault_api.read_secrets()

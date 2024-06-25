@@ -8,6 +8,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
-COPY kandidat-api.py .
+COPY speiling_db_bq.py .
 
-CMD ["python3", "kandidat-api.py"]
+CMD ["python3", "speiling_db_bq.py"]
