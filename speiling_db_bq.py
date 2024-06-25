@@ -39,7 +39,11 @@ def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
             dataframe = psql.read_sql(sql, connection)
             dataframe.columns = dataframe.columns.str.replace("å", "aa")
             jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
-            job = bigQueryKlient.load_table_from_dataframe(dataframe, f"toi-prod-324e.{db_navn}." + tabell, job_config=jobConfig)
+            job = bigQueryKlient.load_table_from_dataframe(
+                dataframe,
+                f"toi-prod-324e.{db_navn.replace("-", "_")}." + tabell,
+                job_config=jobConfig
+            )
             job.result()
             logger.info(f"Har speilet tabell {tabell} til BigQuery")
         except:
