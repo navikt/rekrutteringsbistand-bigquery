@@ -26,7 +26,7 @@ except:
 def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
     try:
         creds = secrets[db_navn + "-db-url"]
-        adeo, ip, creds_loc = creds.split(":")
+        adeo, _, creds_loc = creds.split(":")
         user, password = vault_api.get_database_creds(creds_loc).split(":")
         connection = pg.connect(f"host={adeo} dbname={db_navn} user={user} password={password}")
     except:
