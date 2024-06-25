@@ -9,7 +9,7 @@ NB: Applikasjonen kan deaktiveres fra periodisk kjøring ved å kommentere ut "s
 # Hvordan legge til lesing av ny database
 
 ## Konfigurasjon
-* Gi applikasjonen tilgang til å lese databasen ved å legge inn databasen i [konfigurasjonsfila for rekrutteringsbistand-bigquery](https://github.com/navikt/vault-iac/blob/rekrutteringsbistand-bigquery/terraform/teams/toi/apps/rekrutteringsbistand-bigquery.yaml) i  vault-iac
+* Gi applikasjonen tilgang til å lese databasen ved å legge inn databasen i [konfigurasjonsfila for rekrutteringsbistand-bigquery](https://github.com/navikt/vault-iac/blob/master/terraform/teams/toi/apps/rekrutteringsbistand-bigquery.yaml) i  vault-iac
 * Legg til URL for databasen som ny secret i Vault under kv/prod/fss/rekrutteringsbistand-bigquery/toi
 * Opprett nytt datasett i [GCP Console](https://console.cloud.google.com) med navngivning som gjenspeiler hvilken applikasjon/database tabellene kommer fra
 
