@@ -22,18 +22,33 @@ except:
     logger.error("Kunne ikke lage BigQuery-klient")
     exit(1)
 
-# Kandidat-API
-try:
-    kandidat_api_creds = secrets["rekrutteringsbistand-kandidat-db-url"]
-    adeo, ip, creds_loc = kandidat_api_creds.split(":")
-    user, password = vault_api.get_database_creds(creds_loc).split(":")
-    connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-kandidat user={user} password={password}")
-except:
-    logger.error("Kunne ikke opprette databaseklient (kandidat-api)")
-    exit(1)
+# Funksjon brukt for å speile tabeller fra en database til BigQuery
+def speiling_db_bq(db_navn, url, tabeller, bigQueryKlient, logger):
+    try:
+        creds = secrets[url]
+        adeo, ip, creds_loc = creds.split(":")
+        user, password = vault_api.get_database_creds(creds_loc).split(":")
+        connection = pg.connect(f"host={adeo} dbname={db_navn} user={user} password={password}")
+    except:
+        logger.error(f"Kunne ikke opprette databaseklient for {db_navn}")
+        exit(1)
 
-# Dictionary med tabellnavn og liste for konfigurasjon av hvordan kolonner skal tolkes
-# Eksempel på kolonnekonfigurasjon: bigquery.SchemaField("wikidata_id", bigquery.enums.SqlTypeNames.STRING)
+    for tabell, tabellKonfigurasjon in tabeller.items():
+        try:
+            sql = "select * from " + tabell
+            dataframe = psql.read_sql(sql, connection)
+            dataframe.columns = dataframe.columns.str.replace("å", "aa")
+            jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
+            job = bigQueryKlient.load_table_from_dataframe(dataframe, f"toi-prod-324e.{url}." + tabell, job_config=jobConfig)
+            job.result()
+            logger.info(f"Har speilet tabell {tabell} til BigQuery")
+        except:
+            logger.error(f"Kunne ikke speile tabell {tabell} til BigQuery")
+            exit(1)
+        
+        logger.error(f"Ferdig med speiling av tabeller fra {db_navn}")
+
+# Speiling av kandidat-API
 tabeller = {
     "utfallsendring": [],
     "veilkandidat": [],
@@ -43,33 +58,9 @@ tabeller = {
     "formidlingavusynligkandidat": [],
     "sending_av_kandidathendelse": [],
 }
+speiling_db_bq("rekrutteringsbistand-kandidat", tabeller, bigQueryKlient, logger)
 
-for tabell, tabellKonfigurasjon in tabeller.items():
-    try:
-        sql = "select * from " + tabell
-        dataframe = psql.read_sql(sql, connection)
-        dataframe.columns = dataframe.columns.str.replace("å", "aa")
-        jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
-        job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.kandidat_api." + tabell, job_config=jobConfig)
-        job.result()
-        logger.info("Har speilet tabell " + tabell + " til BigQuery")
-    except:
-        logger.error("Kunne ikke speile tabell " + tabell + " til BigQuery")
-        exit(1)
-
-
-# Statistikk-API
-try:
-    statistikk_api_creds = secrets["rekrutteringsbistand-statistikk-pg15-db-url"]
-    adeo, ip, creds_loc = statistikk_api_creds.split(":")
-    user, password = vault_api.get_database_creds(creds_loc).split(":")
-    connection = pg.connect(f"host={adeo} dbname=rekrutteringsbistand-statistikk-pg15 user={user} password={password}")
-except:
-    logger.error("Kunne ikke opprette databaseklient (statistikk-api)")
-    exit(1)
-
-# Dictionary med tabellnavn og liste for konfigurasjon av hvordan kolonner skal tolkes
-# Eksempel på kolonnekonfigurasjon: bigquery.SchemaField("wikidata_id", bigquery.enums.SqlTypeNames.STRING)
+# Speiling av statistikk-API
 tabeller = {
     "kandidatliste": [],
     "kandidatutfall": [],
@@ -77,19 +68,6 @@ tabeller = {
     "tiltak": [],
     "visning_kontaktinfo": [],
 }
-
-for tabell, tabellKonfigurasjon in tabeller.items():
-    try:
-        sql = "select * from " + tabell
-        dataframe = psql.read_sql(sql, connection)
-        dataframe.columns = dataframe.columns.str.replace("å", "aa")
-        jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
-        job = bigQueryKlient.load_table_from_dataframe(dataframe, "toi-prod-324e.statistikk_api." + tabell, job_config=jobConfig)
-        job.result()
-        logger.info("Har speilet tabell " + tabell + " til BigQuery")
-    except:
-        logger.error("Kunne ikke speile tabell " + tabell + " til BigQuery")
-        exit(1)
+speiling_db_bq("rekrutteringsbistand-statistikk-pg15", tabeller, bigQueryKlient, logger)
 
 logger.info("Ferdig med speiling av alle tabeller")
-exit(0)
