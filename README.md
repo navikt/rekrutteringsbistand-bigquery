@@ -2,7 +2,7 @@
 
 Applikasjonen kjører periodisk NAIS-jobb for å sende data til GCP BigQuery fra databaser i FSS som tilhører Rekrutteringsbistand-applikasjoner. Dette er unødvendig for data som allerede ligger i GCP.
 
-Data som lastes til GCP BigQuery brukes til å kunne publisere datapakker til https://data.intern.nav.no/ og til å lage dashboard for Rekrutteringsbistand (https://metabase.intern.nav.no/).
+Data som lastes til GCP BigQuery brukes til å kunne publisere datapakker og datafortellinger til https://data.ansatt.nav.no/ og til å lage dashboard for Rekrutteringsbistand (https://metabase.ansatt.nav.no/).
 
 NB: Applikasjonen kan deaktiveres fra periodisk kjøring ved å kommentere ut "schedule"-parameteren i nais.yaml.
 
