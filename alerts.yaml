@@ -6,19 +6,20 @@ metadata:
   labels:
     team: toi
 spec:
-  receivers:
-    slack:
-      channel: 'inkludering-alerts-prod'
-  alerts:
-    - alert: rekrutteringsbistand-bigquery
+  groups:
+  - name: rekrutteringsbistand-bigquery
+    rules:
+    - alert: loggetError
       expr: sum(increase(logd_messages_total{log_app="rekrutteringsbistand-bigquery",log_level="Error"}[10m])) > 0
       for: 1s
-      description: Nais-jobben har logget en error
-      action: "https://logs.adeo.no/goto/ac8677aff2fd4bd05415ac86c7cb8275"
-
-    - alert: rekrutteringsbistand-bigquery
-      severity: warning
+      annotations:
+        summary: Nais-jobben har logget en error
+        action: "https://logs.adeo.no/goto/ac8677aff2fd4bd05415ac86c7cb8275"
+    - alert: flereWarnings
+      labels:
+        severity: warning
       expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-bigquery",log_level=~"Warning"}[5m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-bigquery"}[5m]))) > 20
       for: 5m
-      description: Nais-jobben har logget flere warnings
-      action: "https://logs.adeo.no/goto/ac8677aff2fd4bd05415ac86c7cb8275"
+      annotations:
+        summary: Nais-jobben har logget flere warnings
+        action: "https://logs.adeo.no/goto/ac8677aff2fd4bd05415ac86c7cb8275"
