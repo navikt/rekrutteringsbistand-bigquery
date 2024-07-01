@@ -41,7 +41,7 @@ def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
             jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
             job = bigQueryKlient.load_table_from_dataframe(
                 dataframe,
-                f"toi-prod-324e.{db_navn.replace("-", "_")}." + tabell,
+                f"toi-prod-324e.{db_navn.replace('-', '_')}.{tabell}",
                 job_config=jobConfig
             )
             job.result()
