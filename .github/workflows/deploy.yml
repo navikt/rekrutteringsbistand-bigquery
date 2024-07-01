@@ -23,7 +23,7 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # Provided as Organization Variable
       - name: Deploy prod
         uses: nais/deploy/actions/deploy@v2
-        with:
+        env:
           CLUSTER: prod-fss
           RESOURCE: nais.yaml,alerts.yaml
           VAR: image=${{ steps.docker-build-push.outputs.image }}
