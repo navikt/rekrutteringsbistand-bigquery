@@ -1,33 +1,29 @@
 name: Build and deploy
-
 on:
   push:
     branches:
       - main
-
-env:
-  IMAGE: ghcr.io/${{ github.repository }}/rekrutteringsbistand-bigquery:${{ github.sha }}
-
 jobs:
-  build:
-    permissions:
-      packages: write
-    name: build and deploy
+  build_and_deploy:
+    name: Build, push and deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build and push docker image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build --tag ${IMAGE} .
-          echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_REPOSITORY} --password-stdin
-          docker push ${IMAGE}
+      - name: Build and push docker image to GAR
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: toi
+          identity-provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # Provided as Organization Secret
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # Provided as Organization Variable
       - name: Deploy prod
         uses: nais/deploy/actions/deploy@v2
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+        with:
           CLUSTER: prod-fss
           RESOURCE: nais.yaml,alerts.yaml
-          
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
