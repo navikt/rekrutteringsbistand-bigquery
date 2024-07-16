@@ -37,7 +37,7 @@ def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
         try:
             sql = "select * from " + tabell
             dataframe = psql.read_sql(sql, connection)
-            dataframe.columns = dataframe.columns.str.replace("å", "aa")
+            dataframe.columns = dataframe.columns.str.replace({"å": "aa", "ø": "o", "æ": "ae"}, regex=True)
             jobConfig = bigquery.LoadJobConfig(schema=tabellKonfigurasjon, write_disposition="WRITE_TRUNCATE")
             job = bigQueryKlient.load_table_from_dataframe(
                 dataframe,
