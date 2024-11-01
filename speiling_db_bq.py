@@ -74,7 +74,7 @@ tabeller = {
     "formidlingavusynligkandidat": [],
     "sending_av_kandidathendelse": [],
 }
-speiling_db_bq("rekrutteringsbistand-kandidat", tabeller, bigQueryKlient, logger)
+speiling_db_bq("rekrutteringsbistand-kandidat-pg15", tabeller, bigQueryKlient, logger)
 
 # Speiling av statistikk-API
 tabeller = {
