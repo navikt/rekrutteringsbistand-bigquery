@@ -12,6 +12,11 @@ spec:
   webproxy: true
   vault:
     enabled: true
+    paths:
+      - kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-kandidat-pg15-readonly
+        mountPath: /secret/rekrutteringsbistand-kandidat-pg15-readonly
+      - kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-statistikk-pg15-readonly
+        mountPath: /secret/rekrutteringsbistand-statistikk-pg15-readonly
   resources:
     limits:
       cpu: 1000m
