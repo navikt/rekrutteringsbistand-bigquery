@@ -13,9 +13,11 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-kandidat-pg15-readonly
+      - format: env
+        kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-kandidat-pg15-readonly
         mountPath: /secret/rekrutteringsbistand-kandidat-pg15-readonly
-      - kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-statistikk-pg15-readonly
+      - format: env
+        kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-statistikk-pg15-readonly
         mountPath: /secret/rekrutteringsbistand-statistikk-pg15-readonly
   resources:
     limits:
