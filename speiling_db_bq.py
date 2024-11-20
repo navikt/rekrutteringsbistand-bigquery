@@ -10,12 +10,11 @@ logger = logging.getLogger("speiling_db_bq.py")
 
 
 try:
-    bigQueryKlientNøkkel = open(r"/var/run/secrets/nais.io/vault/GCP_json", "r+")
+    bigQueryKlientNøkkel = os.environ["GCP_JSON"]
     bigQueryCredentials = service_account.Credentials.from_service_account_info(
         eval(bigQueryKlientNøkkel)
     )
     bigQueryKlient = bigquery.Client(credentials=bigQueryCredentials)
-    bigQueryKlientNøkkel.close()
 except:
     logger.error("Kunne ikke lage BigQuery-klient")
     exit(1)
