@@ -1,5 +1,5 @@
+import os
 from google.cloud import bigquery
-from dataverk_vault import api as vault_api
 from google.oauth2 import service_account
 import psycopg2 as pg
 import pandas.io.sql as psql
@@ -9,13 +9,7 @@ logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 logger = logging.getLogger("speiling_db_bq.py")
 
 try:
-    secrets = vault_api.read_secrets()
-except:
-    logger.error("Kunne ikke hente secrets fra Vault")
-    exit(1)
-
-try:
-    bigQueryKlientNøkkel = secrets.pop("GCP_json")
+    bigQueryKlientNøkkel = os.environ["GCP_json"]
     bigQueryCredentials = service_account.Credentials.from_service_account_info(
         eval(bigQueryKlientNøkkel)
     )
@@ -28,9 +22,9 @@ except:
 # Funksjon brukt for å speile tabeller fra en database til BigQuery
 def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
     try:
-        creds = secrets[db_navn + "-db-url"]
+        creds = os.environ[db_navn + "-db-url"]
         adeo, _, creds_loc = creds.split(":")
-        user, password = vault_api.get_database_creds(creds_loc).split(":")
+        user, password = os.environ[creds_loc].split(":")
         connection = pg.connect(
             f"host={adeo} dbname={db_navn} user={user} password={password}"
         )
