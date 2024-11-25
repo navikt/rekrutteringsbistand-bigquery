@@ -15,10 +15,10 @@ spec:
     paths:
       - format: env
         kvPath: /serviceuser/data/prod/srv-rekbis-kandidat
-        mountPath: /secret/serviceuser
+        mountPath: /secret/serviceuser-kandidat
       - format: env
         kvPath: /serviceuser/data/prod/srv-rekbis-stat
-        mountPath: /secret/serviceuser
+        mountPath: /secret/serviceuser-statistikk
   resources:
     limits:
       cpu: 1000m
