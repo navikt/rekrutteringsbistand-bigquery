@@ -6,3 +6,4 @@ psycopg2
 pandas
 pyarrow
 pandas-gbq
+dataverk-vault>=0.1.10
