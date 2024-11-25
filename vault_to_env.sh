@@ -9,7 +9,6 @@ if test -f '/secret/rekrutteringsbistand-kandidat-pg15-readonly/password'; then
     echo '- exporting KANDIDAT_PASSWORD'
 fi
 
-#!/bin/sh
 if test -f '/secret/rekrutteringsbistand-statistikk-pg15-readonly/username'; then
     export STATISTIKK_USERNAME=$(cat /secret/rekrutteringsbistand-statistikk-pg15-readonly/username)
     echo '- exporting STATISTIKK_USERNAME'

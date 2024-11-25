@@ -14,11 +14,11 @@ spec:
     enabled: true
     paths:
       - format: env
-        kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-kandidat-pg15-readonly
-        mountPath: /secret/rekrutteringsbistand-kandidat-pg15-readonly
+        kvPath: /serviceuser/data/prod/srv-rekbis-kandidat
+        mountPath: /secret/serviceuser
       - format: env
-        kvPath: /postgresql/prod-fss/creds/rekrutteringsbistand-statistikk-pg15-readonly
-        mountPath: /secret/rekrutteringsbistand-statistikk-pg15-readonly
+        kvPath: /serviceuser/data/prod/srv-rekbis-stat
+        mountPath: /secret/serviceuser
   resources:
     limits:
       cpu: 1000m
