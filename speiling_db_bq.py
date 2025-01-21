@@ -82,7 +82,6 @@ tabeller = {
     "kandidatliste": [],
     "kandidatutfall": [],
     "stilling": [],
-    "tiltak": [],
     "visning_kontaktinfo": [],
 }
 speiling_db_bq("rekrutteringsbistand-statistikk-pg15", tabeller, bigQueryKlient, logger)
