@@ -39,3 +39,9 @@ spec:
       value: /var/run/secrets/nais.io/vault
     - name: K8S_SERVICEACCOUNT_PATH
       value: /var/run/secrets/kubernetes.io/serviceaccount
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+      enabled: true
