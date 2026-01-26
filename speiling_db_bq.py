@@ -62,7 +62,7 @@ def speiling_db_bq(db_navn, tabeller, bigQueryKlient, logger):
             logger.error(f"Kunne ikke speile tabell {tabell} til BigQuery")
             exit(1)
 
-        logger.error(f"Ferdig med speiling av tabeller fra {db_navn}")
+        logger.info(f"Ferdig med speiling av tabeller fra {db_navn}")
 
 
 # Speiling av kandidat-API
