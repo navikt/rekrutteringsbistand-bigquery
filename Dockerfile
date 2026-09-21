@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.11-dev AS compile-image
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.14.7-dev AS compile-image
 
 USER root
 RUN apk add --no-cache build-base postgresql-dev
