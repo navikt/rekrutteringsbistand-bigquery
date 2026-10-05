@@ -10,6 +10,9 @@ ENV PATH="/app/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# pip trengs bare under bygging. Den har med en egen setuptools-kopi (70.3.0) som skannere rapporterer.
+RUN pip uninstall -y pip
+
 # psycopg2 bygges fra kilde og trenger libpq (med avhengigheter) når den kjører.
 # Runtime-imaget har ikke disse, så vi finner bibliotekene psycopg2 faktisk laster
 # og kopierer dem til /app/lib, inkludert symlenkene med soname.
