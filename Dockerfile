@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.14.7-dev AS dev
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.14-dev AS dev
 
 USER root
 RUN apk add --no-cache build-base postgresql-dev
@@ -47,7 +47,7 @@ for sti in sorted(nye):
 PY
 EOF
 
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.14.7
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.14
 
 WORKDIR /app
 
