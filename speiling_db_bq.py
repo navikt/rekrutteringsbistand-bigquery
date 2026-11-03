@@ -78,12 +78,12 @@ tabeller = {
 speiling_db_bq("rekrutteringsbistand-kandidat-pg15", tabeller, bigQueryKlient, logger)
 
 # Speiling av statistikk-API
-tabeller = {
-    "kandidatliste": [],
-    "kandidatutfall": [],
-    "stilling": [],
-    "visning_kontaktinfo": [],
-}
-speiling_db_bq("rekrutteringsbistand-statistikk-pg15", tabeller, bigQueryKlient, logger)
+# tabeller = {
+#    "kandidatliste": [],
+#    "kandidatutfall": [],
+#    "stilling": [],
+#    "visning_kontaktinfo": [],
+# }
+# speiling_db_bq("rekrutteringsbistand-statistikk-pg15", tabeller, bigQueryKlient, logger)
 
 logger.info("Ferdig med speiling av alle tabeller")
